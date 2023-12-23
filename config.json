@@ -1,0 +1,8 @@
+{
+    "token": "",
+    "prefix": "/",
+    "guild_id": 0,
+    "ignored": [],
+    "greet_cd": 43200,
+    "bot_cps": 300
+}

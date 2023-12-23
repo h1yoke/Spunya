@@ -1,31 +1,42 @@
+""" Member callbacks handling module."""
 
+# Type annotation imports
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+# Discord.py API dependencies
 import discord
 
-### member callbacks handling module
-# bot noticed a joined member
-def on_join(bot, member):
-    # print(f"{member} has joined")
-    # await member.guild.text_channels[0].send(f"Здравствуй {member}!")
-    pass
+# Spunya dependencies
+import storage
 
-# bot noticed a removed member
-def on_remove(bot, member):
-    # print(f"{member} has left")
-    # await member.guild.text_channels[0].send(f"Прощай {member}!")
-    pass
+# Debug output logger
+from utils.logger import debug_output
 
-# bot noticed a member update
-def on_update(bot, before, after):
-    pass
+# Import Spunya for typechecking
+if TYPE_CHECKING: from spunya import Spunya
 
-# bot noticed a member ban
-def on_ban(bot, guild, user):
-    pass
+async def on_join(bot: Spunya, member: discord.Member):
+    """ Bot noticed a joined member."""
+    bot.stats[member.id] = storage.UserStats(member)
+    debug_output(f"{member} has joined a guild.", 1)
 
-# bot noticed a member unban
-def on_unban(bot, guild, user):
-    pass
+async def on_remove(bot: Spunya, member: discord.Member):
+    """ Bot noticed a removed member."""
+    debug_output(f"{member} has left a guild.", 1)
 
-# bot noticed a member presence change
-def on_presence_update(bot, before, after):
-    pass
+async def on_update(bot: Spunya, before: discord.Member, after: discord.Member):
+    """ Bot noticed a member update."""
+    debug_output(f"{before} updated their profile.", 2)
+
+async def on_ban(bot: Spunya, guild: discord.Guild, user: (discord.User | discord.Member)):
+    """ Bot noticed a member ban."""
+    debug_output(f"{user} was banned on guild {guild}.", 1)
+
+async def on_unban(bot: Spunya, guild: discord.Guild, user: discord.User):
+    """ Bot noticed a member unban."""
+    debug_output(f"{user} was unbanned on guild {guild}.", 1)
+
+async def on_presence_update(bot: Spunya, before: discord.Member, after: discord.Member):
+    """ Bot noticed a member presence change."""
+    debug_output(f"{before} presence status was updated.", 3)

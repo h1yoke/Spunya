@@ -1,31 +1,55 @@
+""" Channel callbacks handling module."""
 
+# Type annotation imports
+from __future__ import annotations
+from typing import TYPE_CHECKING
+import datetime
+
+# discord.py API dependencies
 import discord
 
-### channel callbacks handling module
-# bot noticed a new channel
-def on_create(bot, channel):
-    pass
+# Debug output logger
+from utils.logger import debug_output
 
-# bot noticed a channel delete
-def on_delete(bot, channel):
-    pass
+# Import Spunya for typechecking
+if TYPE_CHECKING: from spunya import Spunya
 
-# bot noticed a channel update
-def on_update(bot, before, after):
-    pass
+async def on_create(bot: Spunya, channel: discord.abc.GuildChannel):
+    """ Bot noticed a new channel."""
+    debug_output(f"Channel '{channel.name}'[{channel.id}] was created.", 1)
 
-# bot noticed pins update
-def on_pins_update(bot, channel, last_pin):
-    pass
+async def on_delete(bot: Spunya, channel: discord.abc.GuildChannel):
+    """ Bot noticed a channel delete."""
+    debug_output(f"Channel '{channel.name}'[{channel.id}] was deleted.", 1)
 
-# bot noticed private channel update
-def on_private_update(bot, before, after):
-    pass
+async def on_update(bot: Spunya, before: discord.abc.GuildChannel, after: discord.abc.GuildChannel):
+    """ Bot noticed a channel update."""
+    debug_output(f"Channel '{before.name}'[{before.id}] was updated.", 1)
 
-# bot noticed private pin update
-def on_private_pins_update(bot, channel, last_pin):
-    pass
+async def on_pins_update(
+        bot: Spunya,
+        channel: (discord.abc.GuildChannel | discord.Thread),
+        last_pin: (datetime.datetime | None)):
+    """ Bot noticed pins update."""
+    debug_output(f"Channel or thread '{channel.name}'[{channel.id}] pin was updated.", 1)
 
-# bot noticed typing state in channel
-def on_typing(bot, channel, user, when):
-    pass
+async def on_private_update(
+        bot: discord.Client,
+        before: discord.GroupChannel,
+        after: discord.GroupChannel):
+    """ Bot noticed private channel update."""
+    debug_output(f"Private channel '{before.name}'[{before.id}] was updated.", 1)
+
+async def on_private_pins_update(
+        bot: Spunya,
+        channel: discord.abc.PrivateChannel,
+        last_pin: (datetime.datetime | None)):
+    """ Bot noticed private pin update."""
+    debug_output(f"Private channel '{channel.id}' pin was updated.", 1)
+
+async def on_typing(
+        bot: Spunya,
+        channel: discord.abc.Messageable,
+        user: (discord.User | discord.Member),
+        when: datetime.datetime):
+    """ Bot noticed typing state in channel."""
