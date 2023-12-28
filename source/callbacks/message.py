@@ -35,7 +35,7 @@ replies: dict[str, Any] = cast(dict[str, Any], load_json("resources/communicatio
 async def send(
     channel: discord.abc.MessageableChannel,
     text: str,
-    reference: (discord.Message | discord.MessageReference | discord.PartialMessage | None) = None):
+    reference: (discord.Message | discord.MessageReference | discord.PartialMessage | None) = None) -> None:
     """ Send or reply with text string."""
 
     # time to react on invocation
@@ -54,7 +54,7 @@ async def send(
 async def random_answer(
         message: discord.Message,
         answers: list[str],
-        rand_reply: bool = True):
+        rand_reply: bool = True) -> None:
     """ Produce randomly selected answer from list."""
     answer: str = answers[random.randint(0, len(answers) - 1)]
     if rand_reply and random.randint(0, 9) == 4:
@@ -66,7 +66,7 @@ async def answer_question(
         bot: Spunya,
         message:
         discord.Message,
-        questions: dict[str, list[str]]):
+        questions: dict[str, list[str]]) -> None:
     """ Answer question that was asked in 'message'."""
     question = list(filter(lambda x: x in message.content, questions.keys()))[0]
     await random_answer(message, questions[question])
@@ -74,7 +74,7 @@ async def answer_question(
 async def say_goodbye(
         bot: Spunya,
         message: discord.Message,
-        goodbyes: dict[str, list[str]]):
+        goodbyes: dict[str, list[str]]) -> None:
     """ Say goodbye to uesr."""
     await random_answer(message, goodbyes["out"])
 
@@ -82,7 +82,7 @@ async def say_greeting(
         bot: Spunya,
         message: discord.Message,
         greetings: dict[str, list[str]],
-        check_cd: bool = True):
+        check_cd: bool = True) -> None:
     """ Greet user that sent 'message' with given options."""
     if not check_cd:
         await random_answer(message, greetings["common"])
@@ -94,7 +94,7 @@ async def say_greeting(
     if dt / 3600 >= 12:
         await random_answer(message, greetings["common"])
 
-async def image_answer(message: discord.Message, img_url: str):
+async def image_answer(message: discord.Message, img_url: str) -> None:
     """ Response to an attached image."""
     # load image and parse text in it
     text = load_text_image(img_url)
@@ -111,7 +111,7 @@ async def image_answer(message: discord.Message, img_url: str):
         # send answer
         await send(message.channel, answer)
 
-async def rate_artifact(message: discord.Message):
+async def rate_artifact(message: discord.Message) -> None:
     """ Rate artifact from attached image."""
     await image_answer(message, message.attachments[0].url)
 
@@ -119,7 +119,7 @@ async def rate_artifact(message: discord.Message):
 #
 #
 
-async def on_recieve(bot: Spunya, message: discord.Message):
+async def on_recieve(bot: Spunya, message: discord.Message) -> None:
     """ Bot noticed a new message."""
     debug_output(f"New message: '{message.content}'", 3)
 
@@ -163,7 +163,7 @@ async def on_recieve(bot: Spunya, message: discord.Message):
     if message.author.id in bot.stats:
         bot.stats[message.author.id].parse_message(message)
 
-async def on_edit(bot: Spunya, before: discord.Message, after: discord.Message):
+async def on_edit(bot: Spunya, before: discord.Message, after: discord.Message) -> None:
     """ Bot noticed a message edit in channel."""
     debug_output(f"Edited message: '{after.content}'", 3)
     if before is None or after is None:
@@ -171,6 +171,6 @@ async def on_edit(bot: Spunya, before: discord.Message, after: discord.Message):
     if before.content != after.content:
         await after.add_reaction("✍️")
 
-async def on_delete(bot: Spunya, message: discord.Message):
+async def on_delete(bot: Spunya, message: discord.Message) -> None:
     """ Bot noticed a message delete in channel."""
     debug_output(f"Deleted message: '{message.content}'", 3)

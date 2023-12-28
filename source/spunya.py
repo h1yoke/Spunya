@@ -5,7 +5,6 @@ Connects Discord API to distinct callback modules.
 
 # Type annotation imports
 from __future__ import annotations
-from typing import List, Union, Optional
 import datetime
 
 # Discord.py API dependencies
@@ -40,7 +39,7 @@ class Spunya(discord.Client):
         self.stats: dict[int, storage.UserStats] = {}
         self.words: set[str] = set()
         self.ignored_guilds: list[int] = ignored_guilds
-        self.tree: discord.app_commands.CommandTree
+        self.tree: discord.app_commands.CommandTree[discord.Client]
 
     async def on_ready(self) -> None:
         """ Called when the client is done preparing the data received from Discord.
@@ -87,8 +86,8 @@ class Spunya(discord.Client):
 
     async def on_guild_channel_pins_update(
             self,
-            channel: Union[discord.abc.GuildChannel, discord.Thread],
-            last_pin: Optional[datetime.datetime]) -> None:
+            channel: (discord.abc.GuildChannel | discord.Thread),
+            last_pin: (datetime.datetime | None)) -> None:
         """ Called whenever a message is pinned or unpinned from a guild channel.
 
         Keyword arguments:
@@ -107,14 +106,14 @@ class Spunya(discord.Client):
     async def on_private_channel_pins_update(
             self,
             channel: discord.abc.PrivateChannel,
-            last_pin: Optional[datetime.datetime]) -> None:
+            last_pin: (datetime.datetime | None)) -> None:
         """ Called whenever a message is pinned or unpinned from a private channel."""
         await callbacks.channel.on_private_pins_update(self, channel, last_pin)
 
     async def on_typing(
             self,
             channel: discord.abc.Messageable,
-            user: Union[discord.User, discord.Member],
+            user: (discord.User | discord.Member),
             when: datetime.datetime) -> None:
         """ Called when someone begins typing a message."""
         await callbacks.channel.on_typing(self, channel, user, when)
@@ -172,7 +171,7 @@ class Spunya(discord.Client):
         """
         await callbacks.reaction.on_sub(self, reaction, user)
 
-    async def on_reaction_clear(self, message: discord.Message, reactions: List[discord.Reaction]) -> None:
+    async def on_reaction_clear(self, message: discord.Message, reactions: list[discord.Reaction]) -> None:
         """Called when a message has all its reactions removed from it.
 
         Similar to on_message_edit(), if the message is not found
@@ -230,7 +229,10 @@ class Spunya(discord.Client):
         """
         await callbacks.member.on_update(self, before, after)
 
-    async def on_member_ban(self, guild: discord.Guild, user: Union[discord.User, discord.Member]) -> None:
+    async def on_member_ban(
+            self,
+            guild: discord.Guild,
+            user: (discord.User | discord.Member)) -> None:
         """ Called when user gets banned from a Guild.
 
         Can be either User or Member depending if the user

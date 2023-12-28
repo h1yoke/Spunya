@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Any
 import json
 
-def load_json(path: str) -> (list[Any] | dict[Any, Any] | None):
+def load_json(path: str) -> Any:
     """ Loades data from json file in given 'path'."""
     with open(path, "r", encoding = "utf8") as file:
         return json.load(file)

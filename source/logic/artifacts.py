@@ -2,7 +2,7 @@
 
 # Type annotation imports
 from __future__ import annotations
-from typing import Any, TypeAlias
+from typing import Any, cast
 
 # Rate logic imports
 # from Levenshtein import distance as lev_dist
@@ -11,15 +11,12 @@ from typing import Any, TypeAlias
 from utils.logger import debug_output
 from utils.json_loader import load_json
 
-# Number alias
-Number: TypeAlias = (int | float)
-
 def load_data(item: str) -> Any:
     """ Loades artifact data for given item."""
     return load_json("resources/artifacts/" + item + ".json")
 
 # load substat values
-substats = load_data("substats")
+substats = cast(dict[str, Any], load_data("substats"))
 
 def printable(procs: dict[str, int]) -> str:
     """ Set procs in printable format."""
@@ -29,13 +26,13 @@ def printable(procs: dict[str, int]) -> str:
         result += f"{k}: {v} прок(ов)\n"
     return result
 
-eps = 0.05
+eps: float = 0.05
 def evaluate_procs(
         value: float,
         options: list[float],
         depth: int,
         procs: dict[float, int],
-        result: int):
+        result: int) -> None:
     """ Recoursivly get number of procs of given stat."""
 
     if depth > 9: return

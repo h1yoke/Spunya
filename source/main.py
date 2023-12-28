@@ -3,11 +3,12 @@
 NOTE: to run bot setup "token" and "guild" in "config.json".
 """
 
+# Type annotation imports
+from __future__ import annotations
+from typing import Any, cast
+
 # Exit function import
 from sys import exit as sys_exit
-
-# Type annotation imports
-from typing import Any, cast
 
 # Discord.py API dependencies
 import discord
@@ -20,12 +21,9 @@ from utils.json_loader import load_json
 from spunya import Spunya
 from tree import load_command_tree
 
-from logic.artifacts import parse_artifact_info
-
 ### Main program entry
 if __name__ == "__main__":
     # load all config variables
-
     try:
         config: dict[str, Any] = cast(dict[str, Any], load_json("config.json"))
         token: str = config["token"]
@@ -45,17 +43,6 @@ if __name__ == "__main__":
 
     # set debug ouput level
     set_debug_level(2)
-
-    """
-    parse_artifact_info(20, [
-        ("крит. урон", "percent", 20.2),
-        ("шанс крит. попадания", "percent", 6.2),
-        ("нр", "percent", 9.9),
-        ("защита", "percent", 5.8),
-    ])
-
-    exit(0)
-    """
 
     # wake up spunya and bind command tree
     spunya: Spunya = Spunya(guild, prefix, discord.Intents.all())

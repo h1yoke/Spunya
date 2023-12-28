@@ -21,9 +21,9 @@ def load_text_image(img_url: str) -> str:
     if img is None: return ""
 
     # extract text from image
-    text = pytesseract.image_to_string(img, lang="rus")
-    text = re.sub("\n\n", "\n", text)
-    text = re.sub("[^(\d)(\w)(\n)-,. %]|[_]", " ", text)
-    text = re.sub("  ", " ", text)
+    text: str = pytesseract.image_to_string(img, lang="rus")
+    text = re.sub(r"\n\n", "\n", text)
+    text = re.sub(r"[^(\d)(\w)(\n)-,. %]|[_]", " ", text)
+    text = re.sub(r"  ", " ", text)
     debug_output(f"Found text in picture: {text}", 1)
     return text
